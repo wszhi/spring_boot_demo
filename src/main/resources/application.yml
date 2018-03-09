@@ -12,6 +12,13 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5Dialect
+  thymeleaf:
+    suffix: .html
+    mode: HTML
+    encoding: UTF-8
+    cache: false
+    servlet:
+      content-type: text/html
 server:
   port: 8080
   tomcat:

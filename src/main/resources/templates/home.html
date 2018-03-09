@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Spring Boot Thymeleaf Hello World Example</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+</head>
+<body>
+
+<h3>添加用户</h3>
+<div>
+    <form th:action="@{/save}" method="post">
+        User name:<input type="text" name="name"/>
+        <input type="submit" value="add"/>
+    </form>
+</div>
+
+<h3>用户列表</h3>
+<div th:each="user:${users}">
+    <div class="list">
+        <span th:id="${user.id}" th:text="${user.name}"></span>
+        <span th:text="${user.department.name}"></span>
+        <div th:each="role:${user.roles}">
+            <span th:id="${role.id}" th:text="${role.name}"></span>
+        </div>
+        <button class="btn" th:onclick="'updateUser(\''+${user.id}+'\')'">更新</button>
+        <form th:action="@{/delete/__${user.id}__}" method="post">
+            <input type="submit" value="删除"/>
+        </form>
+        <hr/>
+    </div>
+</div>
+
+<script th:src="@{scripts/user.js}"></script>
+</body>
+</html>
