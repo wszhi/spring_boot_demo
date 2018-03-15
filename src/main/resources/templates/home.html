@@ -19,7 +19,7 @@
 <div th:each="user:${users}">
     <div class="list">
         <span th:id="${user.id}" th:text="${user.name}"></span>
-        <span th:text="${user.department.name}"></span>
+        <span th:if="${user.department}" th:text="${user.department.name}"></span>
         <div th:each="role:${user.roles}">
             <span th:id="${role.id}" th:text="${role.name}"></span>
         </div>

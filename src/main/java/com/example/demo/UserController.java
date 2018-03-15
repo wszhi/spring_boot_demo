@@ -9,10 +9,11 @@ import com.example.demo.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,10 +53,11 @@ public class UserController {
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public String save(User user) {
+    public String save(User user,Map<String, Object> model) {
         user.setCreatedate(new Date());
         userRepository.save(user);
         logger.info("save user:" + user.getId());
+        model.put("users", userRepository.findAll());
         return "home";
     }
 
@@ -89,15 +91,16 @@ public class UserController {
     }
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST)
-    public String delete(@PathVariable Long id) {
+    public String delete(@PathVariable Long id,Map<String, Object> model) {
         User currentUser = userRepository.getOne(id);
         userRepository.delete(currentUser);
         logger.info("delete user:" + id);
+        model.put("users", userRepository.findAll());
         return "home";
     }
 
     @RequestMapping(value = "/list")
-    public Page<User> list(HttpServletRequest request) {
+    public ResponseEntity list(HttpServletRequest request) {
         String page = request.getParameter("page");
         String size = request.getParameter("size");
 
@@ -105,7 +108,8 @@ public class UserController {
                 size == null ? 10 : Integer.parseInt(size),
                 new Sort(Sort.Direction.DESC, "id"));
 
-        return userRepository.findAll(pageable);
+        return ResponseEntity.status(HttpStatus.OK).body(userRepository.findAll(pageable));
 
     }
+
 }
